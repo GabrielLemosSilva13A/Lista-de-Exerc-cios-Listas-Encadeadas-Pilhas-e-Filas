@@ -1,0 +1,69 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct Node {
+    int valor;
+    struct Node* proximo;
+} Node;
+
+
+Node* criar_no(int valor) {
+    Node* novo_no = (Node*) malloc(sizeof(Node));
+    novo_no->valor = valor;
+    novo_no->proximo = NULL;
+    return novo_no;
+}
+
+
+void inserir_posicao(Node** cabeca, int valor, int posicao) {
+    Node* novo_no = criar_no(valor);
+
+   
+    if (posicao == 0) {
+        novo_no->proximo = *cabeca;
+        *cabeca = novo_no;
+        return;
+    }
+
+    Node* atual = *cabeca;
+    int i;
+
+    
+    for (i = 0; i < posicao - 1 && atual != NULL; i++) {
+        atual = atual->proximo;
+    }
+
+   
+    if (atual == NULL) {
+        printf("Posição inválida\n");
+        free(novo_no);
+        return;
+    }
+
+    
+    novo_no->proximo = atual->proximo;
+    atual->proximo = novo_no;
+}
+
+
+void imprimir_lista(Node* cabeca) {
+    Node* atual = cabeca;
+    while (atual != NULL) {
+        printf("%d -> ", atual->valor);
+        atual = atual->proximo;
+    }
+    printf("NULL\n");
+}
+
+
+int main() {
+    Node* lista = NULL;
+
+    inserir_posicao(&lista, 10, 0); // Lista: 10
+    inserir_posicao(&lista, 20, 1); // Lista: 10 -> 20
+    inserir_posicao(&lista, 15, 1); // Lista: 10 -> 15 -> 20
+    inserir_posicao(&lista, 5, 0);  // Lista: 5 -> 10 -> 15 -> 20
+    imprimir_lista(lista);
+
+    return 0;
+}
