@@ -1,0 +1,64 @@
+#include <stdio.h>  
+#include <stdlib.h> 
+
+typedef struct No {
+    int dado;          
+    struct No *proximo;
+} No;
+
+void inserir_inicio(No **lista, int dado) {
+    No *novoNo = (No *)malloc(sizeof(No));
+    if (novoNo == NULL) { 
+        perror("Erro ao alocar memória para o novo nó");
+        exit(EXIT_FAILURE);
+    }
+    novoNo->dado = dado;
+    novoNo->proximo = *lista; 
+    *lista = novoNo;         
+}
+
+
+void inserir_fim(No **lista, int dado) {
+    No *novoNo = (No *)malloc(sizeof(No));
+    if (novoNo == NULL) { 
+        perror("Erro ao alocar memória para o novo nó");
+        exit(EXIT_FAILURE);
+    }
+    novoNo->dado = dado;
+    novoNo->proximo = NULL; 
+
+    if (*lista == NULL) { 
+        *lista = novoNo;
+    } else {
+        No *atual = *lista;
+        while (atual->proximo != NULL) { 
+            atual = atual->proximo;
+        }
+        atual->proximo = novoNo;
+    }
+}
+
+// Imprime todos os elementos da lista
+void imprimir_lista(No *lista) {
+    No *atual = lista; 
+    printf("Lista: ");
+    while (atual != NULL) { 
+        printf("%d -> ", atual->dado);
+        atual = atual->proximo;
+    }
+    printf("NULL\n"); 
+}
+
+
+void liberar_lista(No **lista) {
+    No *atual = *lista;
+    No *proximo;
+    while (atual != NULL) {
+        proximo = atual->proximo;
+        free(atual);              
+        atual = proximo;          
+    }
+    *lista = NULL;
+}
+int main() {
+    No *minha_lista = NULL; 
