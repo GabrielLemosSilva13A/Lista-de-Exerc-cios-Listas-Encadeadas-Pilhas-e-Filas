@@ -58,7 +58,12 @@ void liberar_lista(No **lista) {
     *lista = NULL; // Garante que a lista aponte para NULL após a liberação
 }
 
-int main() {
+int main() {  
+    char str[] = "({[]})";  
+    printf("%d\n", verificar_balanceamento(str)); // Deve imprimir 1  
+    return 0;  
+}
+{
     No *lista = NULL;
 
 
