@@ -1,0 +1,67 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct Node {
+    int valor;
+    struct Node* proximo;
+} Node;
+
+void inverter_lista(Node** cabeca) {
+    Node* anterior = NULL;
+    Node* atual = *cabeca;
+    Node* proximo = NULL;
+
+    while (atual != NULL) {
+        proximo = atual->proximo;   // guarda o próximo nó
+        atual->proximo = anterior;  // inverte o ponteiro
+        anterior = atual;           // avança o ponteiro anterior
+        atual = proximo;            // avança para o próximo nó
+    }
+
+    *cabeca = anterior; 
+}
+Node* criar_no(int valor) {
+    Node* novo = (Node*)malloc(sizeof(Node));
+    novo->valor = valor;
+    novo->proximo = NULL;
+    return novo;
+}
+
+void inserir_fim(Node** cabeca, int valor) {
+    Node* novo = criar_no(valor);
+    if (*cabeca == NULL) {
+        *cabeca = novo;
+        return;
+    }
+    Node* atual = *cabeca;
+    while (atual->proximo != NULL) {
+        atual = atual->proximo;
+    }
+    atual->proximo = novo;
+}
+
+void imprimir_lista(Node* cabeca) {
+    while (cabeca != NULL) {
+        printf("%d -> ", cabeca->valor);
+        cabeca = cabeca->proximo;
+    }
+    printf("NULL\n");
+}
+int main() {
+    Node* lista = NULL;
+
+    inserir_fim(&lista, 1);
+    inserir_fim(&lista, 2);
+    inserir_fim(&lista, 3);
+    inserir_fim(&lista, 4);
+
+    printf("Lista original:\n");
+    imprimir_lista(lista);
+
+    inverter_lista(&lista);
+
+    printf("Lista invertida:\n");
+    imprimir_lista(lista);
+
+    return 0;
+}
