@@ -1,0 +1,80 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct Node {
+    int valor;
+    struct Node* proximo;
+} Node;
+
+
+void imprimir_reverso_com_pilha(Node* cabeca) {
+    int tamanho = 0;
+    Node* atual = cabeca;
+    while (atual != NULL) {
+        tamanho++;
+        atual = atual->proximo;
+    }
+
+    
+    int* pilha = (int*)malloc(tamanho * sizeof(int));
+    int topo = -1;
+
+    
+    atual = cabeca;
+    while (atual != NULL) {
+        pilha[++topo] = atual->valor;
+        atual = atual->proximo;
+    }
+
+    
+    while (topo >= 0) {
+        printf("%d -> ", pilha[topo--]);
+    }
+    printf("NULL\n");
+
+   
+    free(pilha);
+}
+Node* criar_no(int valor) {
+    Node* novo = (Node*)malloc(sizeof(Node));
+    novo->valor = valor;
+    novo->proximo = NULL;
+    return novo;
+}
+
+void inserir_fim(Node** cabeca, int valor) {
+    Node* novo = criar_no(valor);
+    if (*cabeca == NULL) {
+        *cabeca = novo;
+        return;
+    }
+    Node* atual = *cabeca;
+    while (atual->proximo != NULL) {
+        atual = atual->proximo;
+    }
+    atual->proximo = novo;
+}
+
+void imprimir_lista(Node* cabeca) {
+    while (cabeca != NULL) {
+        printf("%d -> ", cabeca->valor);
+        cabeca = cabeca->proximo;
+    }
+    printf("NULL\n");
+}
+int main() {
+    Node* lista = NULL;
+
+    inserir_fim(&lista, 1);
+    inserir_fim(&lista, 2);
+    inserir_fim(&lista, 3);
+    inserir_fim(&lista, 4);
+
+    printf("Lista original:\n");
+    imprimir_lista(lista);
+
+    printf("Lista em ordem reversa:\n");
+    imprimir_reverso_com_pilha(lista);
+
+    return 0;
+}
