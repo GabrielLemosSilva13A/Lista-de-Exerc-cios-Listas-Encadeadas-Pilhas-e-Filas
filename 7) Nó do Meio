@@ -6,7 +6,7 @@ typedef struct Node {
     struct Node* proximo;
 } Node;
 
-// Função para encontrar o nó do meio
+
 Node* encontrar_meio(Node* cabeca) {
     if (cabeca == NULL) return NULL;
 
