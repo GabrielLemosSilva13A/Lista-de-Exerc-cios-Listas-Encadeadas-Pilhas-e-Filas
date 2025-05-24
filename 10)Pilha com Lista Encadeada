@@ -1,0 +1,82 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+
+typedef struct Node {
+    int valor;
+    struct Node* proximo;
+} Node;
+
+
+typedef struct {
+    Node* topo;
+} Pilha;
+
+
+void inicializar(Pilha* p) {
+    p->topo = NULL;
+}
+
+
+bool esta_vazia(Pilha* p) {
+    return p->topo == NULL;
+}
+
+
+void push(Pilha* p, int valor) {
+    Node* novo = (Node*)malloc(sizeof(Node));
+    if (!novo) {
+        printf("Erro de alocação de memória!\n");
+        exit(1);
+    }
+    novo->valor = valor;
+    novo->proximo = p->topo;
+    p->topo = novo;
+}
+
+
+bool pop(Pilha* p, int* removido) {
+    if (esta_vazia(p)) {
+        printf("Pilha vazia!\n");
+        return false;
+    }
+    Node* temp = p->topo;
+    *removido = temp->valor;
+    p->topo = temp->proximo;
+    free(temp);
+    return true;
+}
+
+bool topo(Pilha* p, int* valor) {
+    if (esta_vazia(p)) {
+        printf("Pilha vazia!\n");
+        return false;
+    }
+    *valor = p->topo->valor;
+    return true;
+}
+
+void liberar(Pilha* p) {
+    int lixo;
+    while (pop(p, &lixo));
+}
+int main() {
+    Pilha minhaPilha;
+    inicializar(&minhaPilha);
+
+    push(&minhaPilha, 5);
+    push(&minhaPilha, 10);
+    push(&minhaPilha, 15);
+
+    int valor;
+    topo(&minhaPilha, &valor);
+    printf("Topo da pilha: %d\n", valor); // Deve imprimir 15
+
+    while (!esta_vazia(&minhaPilha)) {
+        pop(&minhaPilha, &valor);
+        printf("Desempilhado: %d\n", valor);
+    }
+
+    liberar(&minhaPilha);
+    return 0;
+}
