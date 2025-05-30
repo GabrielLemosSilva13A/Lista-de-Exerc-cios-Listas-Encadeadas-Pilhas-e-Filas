@@ -1,0 +1,52 @@
+#include <stdio.h>
+
+#define TAM 100
+
+typedef struct {
+    int fila[TAM];
+    int inicio;
+    int fim;
+    int tamanho;
+} Fila;
+
+void inicializar(Fila *f) {
+    f->inicio = 0;
+    f->fim = 0;
+    f->tamanho = 0;
+}
+
+int cheia(Fila *f) {
+    return f->tamanho == TAM;
+}
+
+int vazia(Fila *f) {
+    return f->tamanho == 0;
+}
+
+int enfileirar(Fila *f, int valor) {
+    if (cheia(f)) {
+        return 0; // Fila cheia
+    }
+    f->fila[f->fim] = valor;
+    f->fim = (f->fim + 1) % TAM;
+    f->tamanho++;
+    return 1; // Sucesso
+}
+
+int desenfileirar(Fila *f, int *valor) {
+    if (vazia(f)) {
+        return 0; // Fila vazia
+    }
+    *valor = f->fila[f->inicio];
+    f->inicio = (f->inicio + 1) % TAM;
+    f->tamanho--;
+    return 1; // Sucesso
+}
+
+int frente(Fila *f, int *valor) {
+    if (vazia(f)) {
+        return 0; // Fila vazia
+    }
+    *valor = f->fila[f->inicio];
+    return 1;
+}
