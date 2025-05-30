@@ -1,0 +1,51 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+
+typedef struct No {
+    int valor;
+    struct No* prox;
+} No;
+
+
+No* novo_no(int valor) {
+    No* no = (No*)malloc(sizeof(No));
+    no->valor = valor;
+    no->prox = NULL;
+    return no;
+}
+
+
+No* unir_listas_ordenadas(No* l1, No* l2) {
+    // Lista resultado com cabeça dummy
+    No dummy;
+    No* atual = &dummy;
+    dummy.prox = NULL;
+
+    
+    while (l1 != NULL && l2 != NULL) {
+        if (l1->valor < l2->valor) {
+            atual->prox = l1;
+            l1 = l1->prox;
+        } else {
+            atual->prox = l2;
+            l2 = l2->prox;
+        }
+        atual = atual->prox;
+    }
+
+    
+    if (l1 != NULL) atual->prox = l1;
+    if (l2 != NULL) atual->prox = l2;
+
+    return dummy.prox;
+}
+
+
+void imprimir_lista(No* inicio) {
+    while (inicio != NULL) {
+        printf("%d -> ", inicio->valor);
+        inicio = inicio->prox;
+    }
+    printf("NULL\n");
+}
