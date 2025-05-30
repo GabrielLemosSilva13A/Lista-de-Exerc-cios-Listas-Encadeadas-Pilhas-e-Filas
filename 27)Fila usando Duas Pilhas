@@ -1,0 +1,89 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <limits.h>
+
+#define MAX 100
+
+typedef struct {
+    int dados[MAX];
+    int topo;
+} Pilha;
+
+void inicializar(Pilha* p) {
+    p->topo = -1;
+}
+
+int vazia(Pilha* p) {
+    return p->topo == -1;
+}
+
+int cheia(Pilha* p) {
+    return p->topo == MAX - 1;
+}
+
+void push(Pilha* p, int valor) {
+    if (!cheia(p)) {
+        p->dados[++(p->topo)] = valor;
+    } else {
+        printf("Pilha cheia!\n");
+    }
+}
+
+int pop(Pilha* p) {
+    if (!vazia(p)) {
+        return p->dados[(p->topo)--];
+    }
+    printf("Pilha vazia!\n");
+    return INT_MIN;
+}
+
+int top(Pilha* p) {
+    if (!vazia(p)) {
+        return p->dados[p->topo];
+    }
+    return INT_MIN;
+}
+
+
+typedef struct {
+    Pilha pilhaEntrada;
+    Pilha pilhaSaida;
+} Fila;
+
+void inicializar_fila(Fila* f) {
+    inicializar(&f->pilhaEntrada);
+    inicializar(&f->pilhaSaida);
+}
+
+void enfileirar(Fila* f, int valor) {
+    push(&f->pilhaEntrada, valor);
+}
+
+void transferir(Fila* f) {
+    while (!vazia(&f->pilhaEntrada)) {
+        int val = pop(&f->pilhaEntrada);
+        push(&f->pilhaSaida, val);
+    }
+}
+
+int desenfileirar(Fila* f) {
+    if (vazia(&f->pilhaSaida)) {
+        if (vazia(&f->pilhaEntrada)) {
+            printf("Fila vazia!\n");
+            return INT_MIN;
+        }
+        transferir(f);
+    }
+    return pop(&f->pilhaSaida);
+}
+
+int frente(Fila* f) {
+    if (vazia(&f->pilhaSaida)) {
+        if (vazia(&f->pilhaEntrada)) {
+            printf("Fila vazia!\n");
+            return INT_MIN;
+        }
+        transferir(f);
+    }
+    return top(&f->pilhaSaida);
+}
