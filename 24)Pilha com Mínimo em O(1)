@@ -1,0 +1,38 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <limits.h>
+
+#define MAX 100
+
+typedef struct {
+    int dados[MAX];
+    int topo;
+} Pilha;
+
+void inicializar(Pilha* p) {
+    p->topo = -1;
+}
+
+int vazia(Pilha* p) {
+    return p->topo == -1;
+}
+
+int cheia(Pilha* p) {
+    return p->topo == MAX - 1;
+}
+
+void push(Pilha* p, int valor) {
+    if (cheia(p)) return;
+    p->dados[++(p->topo)] = valor;
+}
+
+
+int pop(Pilha* p) {
+    if (vazia(p)) return INT_MIN;
+    return p->dados[(p->topo)--];
+}
+
+int top(Pilha* p) {
+    if (vazia(p)) return INT_MIN;
+    return p->dados[p->topo];
+}
