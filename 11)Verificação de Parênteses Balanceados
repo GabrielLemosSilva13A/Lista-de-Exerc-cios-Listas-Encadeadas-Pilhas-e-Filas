@@ -1,0 +1,35 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define MAX 1000
+
+int verificar_balanceamento(const char *str) {
+    char pilha[MAX];
+    int topo = -1;
+
+    for (int i = 0; str[i] != '\0'; i++) {
+        char c = str[i];
+
+        // Se for caractere de abertura, empilha
+        if (c == '(' || c == '{' || c == '[') {
+            pilha[++topo] = c;
+        } 
+        // Se for caractere de fechamento
+        else if (c == ')' || c == '}' || c == ']') {
+            if (topo < 0) return 0; // pilha vazia, fechamento sem abertura
+
+            char topo_pilha = pilha[topo--]; // desempilha
+
+            // Verifica se os tipos correspondem
+            if ((c == ')' && topo_pilha != '(') ||
+                (c == '}' && topo_pilha != '{') ||
+                (c == ']' && topo_pilha != '[')) {
+                return 0;
+            }
+        }
+    }
+
+    // Se a pilha estiver vazia ao final, está balanceado
+    return topo == -1 ? 1 : 0;
+}
