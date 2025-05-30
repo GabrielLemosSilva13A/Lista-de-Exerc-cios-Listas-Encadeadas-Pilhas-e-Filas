@@ -1,0 +1,79 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct No {
+    int valor;
+    struct No* prox;
+} No;
+
+
+No* inverter_grupos(No* head, int k) {
+    if (!head || k <= 1) return head;
+
+    No* atual = head;
+    No* prev = NULL;
+    No* prox = NULL;
+    int count = 0;
+
+  
+    No* temp = head;
+    int n = 0;
+    while (temp && n < k) {
+        temp = temp->prox;
+        n++;
+    }
+    if (n < k) return head; // menos que k nós, não inverte
+
+
+    count = 0;
+    while (atual != NULL && count < k) {
+        prox = atual->prox;
+        atual->prox = prev;
+        prev = atual;
+        atual = prox;
+        count++;
+    }
+
+    
+    head->prox = inverter_grupos(atual, k);
+
+    return prev; // prev é o novo head do grupo invertido
+}
+
+
+void imprimir_lista(No* head) {
+    while (head) {
+        printf("%d -> ", head->valor);
+        head = head->prox;
+    }
+    printf("NULL\n");
+}
+
+
+No* novo_no(int valor) {
+    No* no = malloc(sizeof(No));
+    no->valor = valor;
+    no->prox = NULL;
+    return no;
+}
+
+
+int main() {
+    // Criando lista: 1 -> 2 -> 3 -> 4 -> 5
+    No* lista = novo_no(1);
+    lista->prox = novo_no(2);
+    lista->prox->prox = novo_no(3);
+    lista->prox->prox->prox = novo_no(4);
+    lista->prox->prox->prox->prox = novo_no(5);
+
+    printf("Lista original:\n");
+    imprimir_lista(lista);
+
+    int k = 2;
+    lista = inverter_grupos(lista, k);
+
+    printf("Lista após inverter grupos de %d:\n", k);
+    imprimir_lista(lista);
+
+    return 0;
+}
