@@ -1,0 +1,47 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct No {
+    int valor;
+    struct No* prox;
+} No;
+
+
+No* novo_no(int valor) {
+    No* no = (No*)malloc(sizeof(No));
+    no->valor = valor;
+    no->prox = NULL;
+    return no;
+}
+
+int tamanho_lista(No* cabeca) {
+    int tam = 0;
+    while (cabeca != NULL) {
+        tam++;
+        cabeca = cabeca->prox;
+    }
+    return tam;
+}
+
+
+No* encontrar_intersecao(No* l1, No* l2) {
+    int tam1 = tamanho_lista(l1);
+    int tam2 = tamanho_lista(l2);
+
+    
+    int dif = abs(tam1 - tam2);
+
+    if (tam1 > tam2) {
+        for (int i = 0; i < dif; i++) l1 = l1->prox;
+    } else {
+        for (int i = 0; i < dif; i++) l2 = l2->prox;
+    }
+
+    while (l1 != NULL && l2 != NULL) {
+        if (l1 == l2) return l1;
+        l1 = l1->prox;
+        l2 = l2->prox;
+    }
+
+    return NULL; // Sem interseção
+}
