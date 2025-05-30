@@ -1,0 +1,83 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <ctype.h>
+#include <string.h>
+
+#define MAX 100
+
+typedef struct {
+    int dados[MAX];
+    int topo;
+} Pilha;
+
+void inicializar(Pilha* p) {
+    p->topo = -1;
+}
+
+int vazia(Pilha* p) {
+    return p->topo == -1;
+}
+
+void push(Pilha* p, int valor) {
+    if (p->topo < MAX - 1) {
+        p->dados[++(p->topo)] = valor;
+    }
+}
+
+int pop(Pilha* p) {
+    if (!vazia(p)) {
+        return p->dados[(p->topo)--];
+    }
+    return 0;
+}
+
+int avaliar_posfixa(const char* expr) {
+    Pilha pilha;
+    inicializar(&pilha);
+
+    char token[20];
+    int i = 0, j = 0;
+    while (1) {
+        
+        j = 0;
+        
+        while (expr[i] == ' ') i++;
+        if (expr[i] == '\0') break;
+
+        
+        while (expr[i] != ' ' && expr[i] != '\0') {
+            token[j++] = expr[i++];
+        }
+        token[j] = '\0';
+
+        
+        if (isdigit(token[0]) || (token[0] == '-' && isdigit(token[1]))) {
+            // Número (inclui negativos)
+            push(&pilha, atoi(token));
+        } else {
+            
+            int val2 = pop(&pilha);
+            int val1 = pop(&pilha);
+            int res = 0;
+
+            switch (token[0]) {
+                case '+': res = val1 + val2; break;
+                case '-': res = val1 - val2; break;
+                case '*': res = val1 * val2; break;
+                case '/':
+                    if (val2 == 0) {
+                        printf("Erro: divisão por zero!\n");
+                        return 0;
+                    }
+                    res = val1 / val2;
+                    break;
+                default:
+                    printf("Operador inválido: %s\n", token);
+                    return 0;
+            }
+            push(&pilha, res);
+        }
+    }
+
+    return pop(&pilha);
+}
