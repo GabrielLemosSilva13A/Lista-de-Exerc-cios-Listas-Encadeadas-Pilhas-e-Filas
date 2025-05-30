@@ -1,0 +1,85 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct No {
+    int valor;
+    struct No* prox;
+} No;
+
+No* inverter_lista(No* head) {
+    No* prev = NULL;
+    No* curr = head;
+    No* next = NULL;
+    while (curr) {
+        next = curr->prox;
+        curr->prox = prev;
+        prev = curr;
+        curr = next;
+    }
+    return prev;
+}
+
+int eh_palindromo(No* head) {
+    if (!head || !head->prox) return 1; // 0 ou 1 elemento: palíndromo
+
+    
+    No *lento = head, *rapido = head;
+    while (rapido->prox && rapido->prox->prox) {
+        lento = lento->prox;
+        rapido = rapido->prox->prox;
+    }
+
+   
+    No* segunda_metade = inverter_lista(lento->prox);
+    No* segunda_metade_copia = segunda_metade; 
+    lento->prox = NULL; 
+
+
+    No* primeiro = head;
+    int palindromo = 1;
+    while (segunda_metade) {
+        if (primeiro->valor != segunda_metade->valor) {
+            palindromo = 0;
+            break;
+        }
+        primeiro = primeiro->prox;
+        segunda_metade = segunda_metade->prox;
+    }
+
+  
+    segunda_metade_copia = inverter_lista(segunda_metade_copia);
+    lento->prox = segunda_metade_copia;
+
+    return palindromo;
+}
+
+
+No* novo_no(int valor) {
+    No* no = malloc(sizeof(No));
+    no->valor = valor;
+    no->prox = NULL;
+    return no;
+}
+
+void imprimir_lista(No* head) {
+    while (head) {
+        printf("%d -> ", head->valor);
+        head = head->prox;
+    }
+    printf("NULL\n");
+}
+
+int main() {
+    No* lista = novo_no(1);
+    lista->prox = novo_no(2);
+    lista->prox->prox = novo_no(3);
+    lista->prox->prox->prox = novo_no(2);
+    lista->prox->prox->prox->prox = novo_no(1);
+
+    imprimir_lista(lista);
+    printf("É palíndromo? %s\n", eh_palindromo(lista) ? "Sim" : "Não");
+
+    imprimir_lista(lista);
+
+    return 0;
+}
