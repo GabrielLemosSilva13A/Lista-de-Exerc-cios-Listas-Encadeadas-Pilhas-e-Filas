@@ -1,0 +1,76 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define TAM 100
+
+
+typedef struct No {
+    char binario[TAM];
+    struct No* proximo;
+} No;
+
+
+typedef struct {
+    No* inicio;
+    No* fim;
+} Fila;
+
+
+void inicializar(Fila* f) {
+    f->inicio = NULL;
+    f->fim = NULL;
+}
+
+
+int vazia(Fila* f) {
+    return f->inicio == NULL;
+}
+
+
+void enfileirar(Fila* f, const char* valor) {
+    No* novo = (No*)malloc(sizeof(No));
+    strcpy(novo->binario, valor);
+    novo->proximo = NULL;
+
+    if (vazia(f)) {
+        f->inicio = novo;
+    } else {
+        f->fim->proximo = novo;
+    }
+    f->fim = novo;
+}
+
+
+int desenfileirar(Fila* f, char* destino) {
+    if (vazia(f)) return 0;
+
+    No* temp = f->inicio;
+    strcpy(destino, temp->binario);
+    f->inicio = temp->proximo;
+    if (f->inicio == NULL) f->fim = NULL;
+    free(temp);
+    return 1;
+}
+
+
+void gerar_binarios(int N) {
+    Fila fila;
+    inicializar(&fila);
+
+    enfileirar(&fila, "1");
+
+    for (int i = 0; i < N; i++) {
+        char atual[TAM];
+        desenfileirar(&fila, atual);
+
+        printf("%s\n", atual);
+
+        char bin0[TAM], bin1[TAM];
+        snprintf(bin0, TAM, "%s0", atual);
+        snprintf(bin1, TAM, "%s1", atual);
+
+        enfileirar(&fila, bin0);
+        enfileirar(&fila, bin1);
+    }
+}
