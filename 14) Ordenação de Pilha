@@ -1,0 +1,61 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX 1000
+
+typedef struct {
+    int dados[MAX];
+    int topo;
+} Pilha;
+
+void inicializar(Pilha *p) {
+    p->topo = -1;
+}
+
+int vazia(Pilha *p) {
+    return p->topo == -1;
+}
+
+int cheia(Pilha *p) {
+    return p->topo == MAX - 1;
+}
+
+void push(Pilha *p, int valor) {
+    if (!cheia(p)) {
+        p->dados[++p->topo] = valor;
+    }
+}
+
+int pop(Pilha *p) {
+    if (!vazia(p)) {
+        return p->dados[p->topo--];
+    }
+    return -1; // erro
+}
+
+int topo(Pilha *p) {
+    if (!vazia(p)) {
+        return p->dados[p->topo];
+    }
+    return -1; // erro
+}
+
+void ordenar_pilha(Pilha *original) {
+    Pilha aux;
+    inicializar(&aux);
+
+    while (!vazia(original)) {
+        int temp = pop(original);
+
+        
+        while (!vazia(&aux) && topo(&aux) > temp) {
+            push(original, pop(&aux));
+        }
+
+        push(&aux, temp);
+    }
+
+    while (!vazia(&aux)) {
+        push(original, pop(&aux));
+    }
+}
