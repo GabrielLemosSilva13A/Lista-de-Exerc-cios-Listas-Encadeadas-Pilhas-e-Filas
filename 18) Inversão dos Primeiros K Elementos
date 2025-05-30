@@ -1,0 +1,75 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define TAM 100
+
+
+typedef struct {
+    int dados[TAM];
+    int inicio;
+    int fim;
+    int tamanho;
+} Fila;
+
+void inicializar_fila(Fila* f) {
+    f->inicio = 0;
+    f->fim = 0;
+    f->tamanho = 0;
+}
+
+int vazia_fila(Fila* f) {
+    return f->tamanho == 0;
+}
+
+int cheia_fila(Fila* f) {
+    return f->tamanho == TAM;
+}
+
+int enfileirar(Fila* f, int valor) {
+    if (cheia_fila(f)) return 0;
+    f->dados[f->fim] = valor;
+    f->fim = (f->fim + 1) % TAM;
+    f->tamanho++;
+    return 1;
+}
+
+int desenfileirar(Fila* f, int* valor) {
+    if (vazia_fila(f)) return 0;
+    *valor = f->dados[f->inicio];
+    f->inicio = (f->inicio + 1) % TAM;
+    f->tamanho--;
+    return 1;
+}
+
+void imprimir_fila(Fila* f) {
+    int i = f->inicio;
+    for (int cont = 0; cont < f->tamanho; cont++) {
+        printf("%d ", f->dados[i]);
+        i = (i + 1) % TAM;
+    }
+    printf("\n");
+}
+
+
+void inverter_primeiros_k(Fila* f, int k) {
+    if (k <= 0 || k > f->tamanho) return;
+
+    int pilha[TAM];
+    int topo = -1;
+    int valor;
+
+    for (int i = 0; i < k; i++) {
+        desenfileirar(f, &valor);
+        pilha[++topo] = valor;
+    }
+
+    while (topo >= 0) {
+        enfileirar(f, pilha[topo--]);
+    }
+
+    int restantes = f->tamanho - k;
+    for (int i = 0; i < restantes; i++) {
+        desenfileirar(f, &valor);
+        enfileirar(f, valor);
+    }
+}
