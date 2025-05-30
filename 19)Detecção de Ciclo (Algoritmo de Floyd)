@@ -1,0 +1,25 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+
+typedef struct No {
+    int valor;
+    struct No* prox;
+} No;
+
+
+int detectar_ciclo(No* inicio) {
+    No* lento = inicio;
+    No* rapido = inicio;
+
+    while (rapido != NULL && rapido->prox != NULL) {
+        lento = lento->prox;
+        rapido = rapido->prox->prox;
+
+        if (lento == rapido) {
+            return 1; // ciclo detectado
+        }
+    }
+
+    return 0; 
+}
