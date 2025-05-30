@@ -1,0 +1,48 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+
+typedef struct No {
+    int valor;
+    struct No* prox;
+} No;
+
+
+No* novo_no(int valor) {
+    No* no = (No*)malloc(sizeof(No));
+    no->valor = valor;
+    no->prox = NULL;
+    return no;
+}
+
+
+void remover_todas_ocorrencias(No** inicio, int alvo) {
+    No* atual = *inicio;
+    No* anterior = NULL;
+
+    while (atual != NULL) {
+        if (atual->valor == alvo) {
+            No* temp = atual;
+            if (anterior == NULL) {
+                // Remover do início
+                *inicio = atual->prox;
+            } else {
+                anterior->prox = atual->prox;
+            }
+            atual = atual->prox;
+            free(temp);
+        } else {
+            anterior = atual;
+            atual = atual->prox;
+        }
+    }
+}
+
+
+void imprimir_lista(No* inicio) {
+    while (inicio != NULL) {
+        printf("%d -> ", inicio->valor);
+        inicio = inicio->prox;
+    }
+    printf("NULL\n");
+}
